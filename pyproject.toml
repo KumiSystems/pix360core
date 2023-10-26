@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pix360core"
+version = "0.0.1"
+authors = [
+  { name="Kumi Systems e.U.", email="office@kumi.systems" },
+]
+description = "Core features of PIX360"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "cube2sphere",
+  "pillow"
+]
+
+[project.urls]
+"Homepage" = "https://kumig.it/kumisystems/pix360core"
+"Bug Tracker" = "https://kumig.it/kumisystems/pix360core/issues"
