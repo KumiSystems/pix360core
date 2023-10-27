@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ConverterView, StartConversionView, ConversionStatusView, ConversionLogView, ConversionListView, ConversionDeleteView, ConversionResultView
+from .views import ConverterView, StartConversionView, ConversionStatusView, ConversionLogView, ConversionListView, ConversionDeleteView, ConversionResultView, ConversionRetryView, ConversionDownloadView
 
 urlpatterns = [
     path('', ConverterView.as_view(), name='converter'),
@@ -10,4 +10,6 @@ urlpatterns = [
     path('list', ConversionListView.as_view(), name='conversion_list'),
     path('delete/<uuid:id>', ConversionDeleteView.as_view(), name='conversion_delete'),
     path('result/<uuid:id>', ConversionResultView.as_view(), name='conversion_result'),
+    path('retry/<uuid:id>', ConversionRetryView.as_view(), name='conversion_retry'),
+    path('download/<uuid:id>', ConversionDownloadView.as_view(), name='conversion_download'),
 ]

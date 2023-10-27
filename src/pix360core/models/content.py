@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+import mimetypes
 import uuid
 
 def file_upload_path(instance, filename) -> str:
@@ -46,6 +47,7 @@ class ConversionStatus(models.IntegerChoices):
     PROCESSING = 1
     DONE = 2
     FAILED = -1
+    DISMISSED = -2
 
     DOWNLOADING = 10
     STITCHING = 11
@@ -83,3 +85,17 @@ class Conversion(models.Model):
             File.DoesNotExist: If no result file exists
         """
         return File.objects.get(conversion=self, is_result=True)
+
+    def get_result_filename(self) -> str:
+        """Get the final filename for the result file
+
+        Returns:
+            str: Filename for the result file
+
+        Raises:
+            File.DoesNotExist: If no result file exists
+        """
+        
+        basename = "".join([c for c in self.title if c.isalnum() or c in "._- "])
+        extension = mimetypes.guess_extension(self.result.mime_type)
+        return f"{basename}{extension}"

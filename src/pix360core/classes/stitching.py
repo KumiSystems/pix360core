@@ -145,7 +145,7 @@ class BlenderStitcher(BaseStitcher):
                 raise StitchingError(f"cube2sphere stitching failed for conversion {files[0].conversion.id}")
 
             with (Path(tempdir) / "out0001.png").open("rb") as f:
-                result = File.objects.create(conversion=files[0].conversion, file=ContentFile(f.read(), name="result.png"))
+                result = File.objects.create(conversion=files[0].conversion, file=ContentFile(f.read(), name="result.png"), mime_type="image/png")
 
             return result
 
@@ -243,7 +243,7 @@ class PILStitcher(BaseStitcher):
         PIL.Image.frombytes("RGB", (t_width, t_height), bytes(raw)).save(bio, "PNG")
         bio.seek(0)
 
-        result = File.objects.create(conversion=files[0].conversion, file=ContentFile(output, name="result.png"))
+        result = File.objects.create(conversion=files[0].conversion, file=ContentFile(output, name="result.png", mime_type="image/png"))
 
         return result
 
@@ -292,7 +292,7 @@ class PILStitcher(BaseStitcher):
         result.save(bio, "PNG")
         bio.seek(0)
 
-        result_file = File.objects.create(conversion=files[0][0].conversion, file=ContentFile(bio.read(), name="result.png"))
+        result_file = File.objects.create(conversion=files[0][0].conversion, file=ContentFile(bio.read(), name="result.png"), mime_type="image/png")
         return result_file
 
 

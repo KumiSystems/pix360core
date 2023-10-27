@@ -3,6 +3,7 @@ from .models import Conversion, File, ConversionStatus
 from .classes import ConversionError
 
 from django.conf import settings
+from django.db import transaction
 
 import multiprocessing
 import logging
@@ -65,30 +66,33 @@ class Worker(multiprocessing.Process):
         """
         while True:
             try:
-                conversion = Conversion.objects.filter(status=ConversionStatus.PENDING).first()
+                with transaction.atomic():
+                    conversion = Conversion.objects.select_for_update().filter(status=ConversionStatus.PENDING).first()
                 
-                if conversion:
-                    conversion.status = ConversionStatus.PROCESSING
-                    conversion.save()
-                    self.logger.info(f"Processing conversion {conversion.id}")
-                
-                    try:
-                        result = self.process_conversion(conversion)
-                        result.is_result = True
-                        result.save()
-                        conversion.status = ConversionStatus.DONE
+                    if conversion:
+                        conversion.status = ConversionStatus.PROCESSING
                         conversion.save()
-                        self.logger.info(f"Conversion {conversion.id} done")
-                    except Exception as e:
-                        conversion.status = ConversionStatus.FAILED
-                        conversion.log = traceback.format_exc()
-                        conversion.save()
-                        self.logger.error(f"Conversion {conversion.id} failed: {e}")
-                        self.logger.debug(traceback.format_exc())
 
-                else:
-                    self.logger.debug("No conversion to process")
-                    time.sleep(1)
+                    else:
+                        self.logger.debug("No conversion to process")
+                        time.sleep(1)
+                        continue
+
+                self.logger.info(f"Processing conversion {conversion.id}")
+            
+                try:
+                    result = self.process_conversion(conversion)
+                    result.is_result = True
+                    result.save()
+                    conversion.status = ConversionStatus.DONE
+                    conversion.save()
+                    self.logger.info(f"Conversion {conversion.id} done")
+                except Exception as e:
+                    conversion.status = ConversionStatus.FAILED
+                    conversion.log = traceback.format_exc()
+                    conversion.save()
+                    self.logger.error(f"Conversion {conversion.id} failed: {e}")
+                    self.logger.debug(traceback.format_exc())
 
             except Exception as e:
                 self.logger.error(f"Worker error: {e}")

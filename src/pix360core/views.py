@@ -47,7 +47,7 @@ class ConversionStatusView(LoginRequiredMixin, View):
 
         if conversion.status == ConversionStatus.DONE:
             response['status'] = "completed"
-            response['result'] = conversion.result.file.path
+            response['result'] = conversion.result.file.url
             response['content_type'] = conversion.result.mime_type
         elif conversion.status == ConversionStatus.FAILED:
             response['status'] = "failed"
@@ -127,7 +127,49 @@ class ConversionDeleteView(LoginRequiredMixin, View):
                 'error': 'Conversion not found'
             }, status=404)
         
-        conversion.user = None
+        conversion.status = ConversionStatus.DISMISSED
         conversion.save()
         
         return JsonResponse({})
+
+class ConversionRetryView(LoginRequiredMixin, View):
+    """View for retrying a conversion
+    """
+    def get(self, request, *args, **kwargs):
+        """Handle the POST request
+        """
+        conversion = Conversion.objects.filter(id=kwargs['id']).first()
+        if not conversion or not (conversion.user == request.user):
+            return JsonResponse({
+                'error': 'Conversion not found'
+            }, status=404)
+        
+        new_conversion = Conversion.objects.create(url=conversion.url, title=conversion.title, user=request.user)
+
+        return JsonResponse({
+            'id': new_conversion.id
+        })
+        
+class ConversionDownloadView(LoginRequiredMixin, View):
+    """View for downloading a conversion
+    """
+    def get(self, request, *args, **kwargs):
+        """Handle the GET request
+        """
+        conversion = Conversion.objects.filter(id=kwargs['id']).first()
+        if not conversion or not (conversion.user == request.user):
+            return JsonResponse({
+                'error': 'Conversion not found'
+            }, status=404)
+        
+        file = conversion.result
+        if not file:
+            return JsonResponse({
+                'error': 'Conversion not done'
+            }, status=404)
+
+        content = file.file.read()
+
+        response = HttpResponse(content, content_type=file.mime_type)
+        response['Content-Disposition'] = f'attachment; filename="{conversion.get_result_filename()}"'
+        return response
