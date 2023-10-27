@@ -118,7 +118,7 @@ class ConversionListView(LoginRequiredMixin, View):
 class ConversionDeleteView(LoginRequiredMixin, View):
     """View for deleting a conversion
     """
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         """Handle the POST request
         """
         conversion = Conversion.objects.filter(id=kwargs['id']).first()

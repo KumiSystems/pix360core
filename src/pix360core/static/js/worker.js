@@ -21,6 +21,10 @@ function unlockform() {
 function deletecard(jobid) {
   if ($("#" + jobid).length) {
     $("#" + jobid).remove();
+    $.ajax({
+      type: "GET",
+      url: "/delete/" + jobid,
+    });
   }
 }
 
