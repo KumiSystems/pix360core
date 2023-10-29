@@ -1,64 +1,162 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.min.css" %}" type="text/css"> 
+    <link rel="stylesheet" href="{% static "dist/css/theme.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "dist/css/pannellum.css" %}" type="text/css">
+    <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
+    <title>Panorama Image Export</title>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{% static "dist/css/theme.css" %}" type="text/css">
-  <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
-  <title>Panorama Image Export</title>
-</head>
-
-<body>
-  <div class="py-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="">Panorama Image Export</h1>
-	  <h2 class=""><a href="https://kumi.systems/">by Kumi Systems</a></h2>
+  <body>
+    <div class="py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="">Panorama Image Export</h1>
+            <h2 class="">
+              <a href="https://kumi.systems/">by Kumi Systems</a>
+            </h2>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="py-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <form class="" id="theform">
-            <div class="form-group"> <label>URL</label> <input type="text" class="form-control" placeholder="https://example.com/0/0/0_0.jpg" name="url" required="required">
-            <div class="form-group"> <label>Title</label> <input type="" class="form-control" placeholder="1234 - Shiny Place" id="title" name="title"> </div>
-	    <div class="form-group"> <label style="display: block;">Resolution</label> <input type="" class="form-control" placeholder="3840" name="width" style="width: 100px; display: inline;"> x <input type="" class="form-control" placeholder="1920" name="height" style="width: 100px; display: inline;"> </div>
-	    <div id="options">
-		    <div class="form-group"> <label style="display: block;">Rotation on X/Y/Z axes</label> <input type="" class="form-control" placeholder="0" name="rx" style="width: 100px; display: inline;"> / <input type="" class="form-control" placeholder="0" name="ry" style="width: 100px; display: inline;"> / <input type="" class="form-control" placeholder="0" name="rz" style="width: 100px; display: inline;"> </div>
-        	    <div class="form-group"> <label>Transposition<br></label><select class="custom-control custom-select" name="transpose">
-                	<option value="1" selected="True">Default: Flip left-right (mirror)</option>
-                	<option value="0">No transposition</option>
-              	</select> </div>
-	      </div>
-	      <button type="submit" class="btn btn-success">Submit</button> <button type="reset" class="btn btn-danger">Reset</button> <button type="button" class="btn btn-info" onclick="toggleOptions()">More options</button>
-          </form>
+    <div class="py-1">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <form class="" id="theform">
+              <div class="form-group">
+                <label>URL</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="https://example.com/0/0/0_0.jpg"
+                  name="url"
+                  required="required"
+                />
+              </div>
+              <div class="form-group">
+                <label>Title</label>
+                <input
+                  type=""
+                  class="form-control"
+                  placeholder="1234 - Shiny Place"
+                  id="title"
+                  name="title"
+                />
+              </div>
+              <div class="form-group">
+                <label style="display: block">Resolution</label>
+                <input
+                  type=""
+                  class="form-control"
+                  placeholder="3840"
+                  name="width"
+                  style="width: 100px; display: inline"
+                />
+                x
+                <input
+                  type=""
+                  class="form-control"
+                  placeholder="1920"
+                  name="height"
+                  style="width: 100px; display: inline"
+                />
+              </div>
+              <div id="options">
+                <div class="form-group">
+                  <label style="display: block">Rotation on X/Y/Z axes</label>
+                  <input
+                    type=""
+                    class="form-control"
+                    placeholder="0"
+                    name="rx"
+                    style="width: 100px; display: inline"
+                  />
+                  /
+                  <input
+                    type=""
+                    class="form-control"
+                    placeholder="0"
+                    name="ry"
+                    style="width: 100px; display: inline"
+                  />
+                  /
+                  <input
+                    type=""
+                    class="form-control"
+                    placeholder="0"
+                    name="rz"
+                    style="width: 100px; display: inline"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Transposition<br /></label
+                  ><select
+                    class="form-control"
+                    name="transpose"
+                  >
+                    <option value="0">No transposition</option>
+                    <option value="1" selected="True">
+                      Flip left-right (mirror)
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <hr />
+              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="reset" class="btn btn-danger">Reset</button>
+              <button
+                type="button"
+                class="btn btn-info"
+                onclick="toggleOptions()"
+              >
+                More options
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-<div class="py-5">
-  <div class="container">
-    <div class="row" id="cards"></div>
-  </div>
-</div>
+    <div class="py-5">
+      <div class="container">
+        <div class="row" id="cards"></div>
+      </div>
+    </div>
 
-<div class="modal"></div>
+    <div
+      class="modal fade"
+      id="panoramaModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-header">
+          <h5 class="modal-title" id="panoramaModalTitle"></h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-content">
+          <div id="panorama"></div>
+        </div>
+      </div>
+    </div>
 
-  <script src="{% static "dist/js/jquery-3.3.1.min.js" %}"></script>
-  <script src="{% static "dist/js/bootstrap.min.js" %}"></script>
-  <script src="{% static "js/worker.js" %}"></script>
-
-<script>
-
-</script>
-
-</body>
-
+    <script src="{% static "dist/js/jquery-3.7.1.min.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "dist/js/pannellum.js" %}"></script>
+    <script src="{% static "js/worker.js" %}"></script>
+  </body>
 </html>

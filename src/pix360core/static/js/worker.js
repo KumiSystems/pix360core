@@ -150,6 +150,16 @@ function finishcard(jobid, title, video) {
       window.clearInterval(interval);
     }
   }, 2000);
+
+  $("#" + jobid + " img").on("click", function () {
+    imgurl = $(this).attr("src");
+    pannellum.viewer("panorama", {
+      type: "equirectangular",
+      panorama: imgurl,
+      autoLoad: true,
+    });
+    $("#panoramaModal").modal("show");
+  });
 }
 
 $("#theform").submit(function (event) {
