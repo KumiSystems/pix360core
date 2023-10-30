@@ -12,4 +12,5 @@ urlpatterns = [
     path('result/<uuid:id>', ConversionResultView.as_view(), name='conversion_result'),
     path('retry/<uuid:id>', ConversionRetryView.as_view(), name='conversion_retry'),
     path('download/<uuid:id>', ConversionDownloadView.as_view(), name='conversion_download'),
+    path('download/<uuid:id>/<int:width>/<int:height>/', ConversionDownloadView.as_view(), name='conversion_download_resized'),
 ]

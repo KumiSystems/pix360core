@@ -6,6 +6,8 @@ from django.utils.decorators import method_decorator
 
 from pix360core.models import Conversion, ConversionStatus
 
+import PIL.Image
+
 
 class ConverterView(LoginRequiredMixin, TemplateView):
     """View for the converter
@@ -168,8 +170,18 @@ class ConversionDownloadView(LoginRequiredMixin, View):
                 'error': 'Conversion not done'
             }, status=404)
 
-        content = file.file.read()
+        if "width" in kwargs:
+            width = int(kwargs['width'])
+            height = int(kwargs['height'])
+            PIL.Image.MAX_IMAGE_PIXELS = None
+            image = PIL.Image.open(file.file)
+            image.thumbnail((width, height))
+            image = image.convert('RGB')
+            response = HttpResponse(content_type="image/jpeg")
+            image.save(response, "JPEG")
+            return response
 
+        content = file.file.read()
         response = HttpResponse(content, content_type=file.mime_type)
         response['Content-Disposition'] = f'attachment; filename="{conversion.get_result_filename()}"'
         return response

@@ -155,7 +155,7 @@ function finishcard(jobid, title, video) {
     imgurl = $(this).attr("src");
     pannellum.viewer("panorama", {
       type: "equirectangular",
-      panorama: imgurl,
+      panorama: imgurl + "/3840/1920/",
       autoLoad: true,
     });
     $("#panoramaModal").modal("show");
