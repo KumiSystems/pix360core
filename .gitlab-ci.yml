@@ -1,0 +1,13 @@
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - git clone https://kumig.it/kumisystems/pix360.git project
+    - cd project
+    - pip install -Ur requirements.txt
+    - pip install ..
+    - python manage.py migrate
+    - python manage.py installmodules
+    - python manage.py runserver &
