@@ -12,3 +12,8 @@ class StitchingError(ConversionError):
     """Generic error that occurred while attempting to stitch content
     """
     pass
+
+class InstallError(Exception):
+    """Generic error that occurred while attempting to install a module
+    """
+    pass
