@@ -29,48 +29,44 @@ function deletecard(jobid) {
 }
 
 function checkServerForFile(jobid, title, interval) {
-    $.ajax({
-      type: "GET",
-      cache: false,
-      url: "/status/" + jobid,
-      statusCode: {
-        403: function () {
-          Notification.requestPermission(function (permission) {
-            if (permission === "granted") {
-              var notification = new Notification("PIX360", {
-                body: "Your session has expired. Please log in again.",
-              });
-            }
-          });
-          window.location.href = "/";
-        },
-        404: function () {
-          clearInterval(intervals[jobid]);
-          failcard(jobid, title);
-          return;
-        },
-        200: function (data, tstatus, xhr) {
-          if (data.status == "completed") {
-            clearInterval(intervals[jobid]);
-            finishcard(
-              jobid,
-              title,
-              data.content_type == "video/mp4"
-            );
-            return;
-          } else if (data.status == "failed") {
-            clearInterval(intervals[jobid]);
-            failcard(jobid, title);
-            return;
+  $.ajax({
+    type: "GET",
+    cache: false,
+    url: "/status/" + jobid,
+    statusCode: {
+      403: function () {
+        Notification.requestPermission(function (permission) {
+          if (permission === "granted") {
+            var notification = new Notification("PIX360", {
+              body: "Your session has expired. Please log in again.",
+            });
           }
-        },
-        500: function () {
+        });
+        window.location.href = "/";
+      },
+      404: function () {
+        clearInterval(intervals[jobid]);
+        failcard(jobid, title);
+        return;
+      },
+      200: function (data, tstatus, xhr) {
+        if (data.status == "completed") {
+          clearInterval(intervals[jobid]);
+          finishcard(jobid, title, data.content_type == "video/mp4");
+          return;
+        } else if (data.status == "failed") {
           clearInterval(intervals[jobid]);
           failcard(jobid, title);
           return;
-        },
+        }
       },
-    });
+      500: function () {
+        clearInterval(intervals[jobid]);
+        failcard(jobid, title);
+        return;
+      },
+    },
+  });
 }
 
 function addcard(jobid, title) {
@@ -108,7 +104,9 @@ function failcard(jobid, title) {
     '<div class="card"> <div style="text-align: center; color: red; font-weight: bold;" class="card-block">' +
     title +
     ': Export failed.</div><div style="text-align: center;" class="card-block"><a style="color: white;" onclick="restartconversion (\'' +
-    jobid + '\', \'' + title +
+    jobid +
+    "', '" +
+    title +
     '\');" class="btn btn-info">Retry</a> <a style="color: white;" onclick="deletecard(\'' +
     jobid +
     '\');" class="btn btn-danger">Hide</a></div> </div>';
@@ -124,32 +122,26 @@ function finishcard(jobid, title, video) {
     }
   });
   var text =
-    '<div class="card"> <img ' +
-    (video ? 'id="' + jobid + '-thumb"' : "") +
+    '<div class="card"> <' +
+    (video ? "video" : "img") +
     ' class="card-img-top img-fluid" download src="/download/' +
     jobid +
-    (video ? "-thumb" : "") +
     '" alt="Final ' +
     (video ? "Video" : "Image") +
-    '"><div style="text-align: center; font-weight: bold;" class="card-block">' +
+    '">' +
+    (video ? "</video>" : "") +
+    '<div style="text-align: center; font-weight: bold;" class="card-block">' +
     title +
-    '</div> <div style="text-align: center; color: white;" class="card-block"><a style="color: white;" onclick="restartconversion (\'' +
-    jobid + '\', \'' + title +
-    '\');" class="btn btn-info">Retry</a><a href="/download/' +
+    '</div> <div style="text-align: center; color: white;" class="card-block"><a style="color: white;" onclick="restartconversion(\'' +
+    jobid +
+    "', '" +
+    title +
+    '\');" class="btn btn-info">Retry</a> <a href="/download/' +
     jobid +
     '" class="btn btn-primary">Download</a> <a onclick="deletecard(\'' +
     jobid +
     '\');" class="btn btn-danger">Hide</a> </div> </div>';
   $("#" + jobid).html(text);
-
-  var counter = 0;
-  var interval = setInterval(function () {
-    var image = document.getElementById(jobid + "-thumb");
-    image.src = "/download/" + jobid + "-thumb?rand=" + Math.random();
-    if (++counter === 10) {
-      window.clearInterval(interval);
-    }
-  }, 2000);
 
   $("#" + jobid + " img").on("click", function () {
     imgurl = $(this).attr("src");
@@ -193,13 +185,13 @@ function initialize() {
           intervals[job.id] = interval;
         }
       }
-    }
+    },
   });
 }
 
 $(document).ready(function () {
   if (Notification.permission !== "granted") {
     Notification.requestPermission();
-  };
+  }
   initialize();
 });
