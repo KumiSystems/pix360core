@@ -123,7 +123,7 @@ function finishcard(jobid, title, video) {
   });
   var text =
     '<div class="card"> <' +
-    (video ? "video" : "img") +
+    (video ? "video controls" : "img") +
     ' class="card-img-top img-fluid" download src="/download/' +
     jobid +
     '" alt="Final ' +
