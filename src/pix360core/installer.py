@@ -4,7 +4,7 @@ import json
 import subprocess
 
 class Installer:
-    MODULES_JSON = "https://kumig.it/-/snippets/131/raw/main/modules.json"
+    MODULES_JSON = "https://git.private.coffee/KumiSystems/pix360-modules/raw/branch/main/modules.json"
 
     def __init__(self):
         self.available_modules = self.fetch_modules()
