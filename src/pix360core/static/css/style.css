@@ -61,7 +61,31 @@ form {
   height: 500px;
 }
 
-.card-block .btn {
+.card-block > .btn {
   width: 100%;
   margin-top: 1px;
+}
+
+.info-symbol {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: help;
+  color: #17a2b8;
+}
+
+.info-symbol:hover {
+  color: #1397a3;
+}
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: none;
+}
+
+/* Accessibility for keyboard navigation */
+abbr[title]:focus {
+  outline: 2px dashed #17a2b8;
+  outline-offset: 2px;
 }
