@@ -88,6 +88,7 @@ function restartconversion(jobid, title) {
       var interval = setInterval(checkServerForFile, 3000, msg.id, title);
       intervals[msg.id] = interval;
       addcard(msg.id, title);
+      deletecard(jobid);
     },
   });
 }
