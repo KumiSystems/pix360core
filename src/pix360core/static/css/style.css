@@ -60,3 +60,8 @@ form {
 #panorama {
   height: 500px;
 }
+
+.card-block .btn {
+  width: 100%;
+  margin-top: 1px;
+}
