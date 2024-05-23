@@ -98,7 +98,7 @@ class ConversionResultView(LoginRequiredMixin, View):
 
         content = file.file.read()
 
-        response = HttpResponse(content, content_type=file.mime_type)
+        return HttpResponse(content, content_type=file.mime_type)
 
 class ConversionListView(LoginRequiredMixin, View):
     """View for getting the list of conversions

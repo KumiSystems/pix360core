@@ -1,12 +1,10 @@
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
-from .models.auth import User
-
 
 class OIDCBackend(OIDCAuthenticationBackend):
     def create_user(self, claims):
-        email = claims.get('email')
+        email = claims.get("email")
         return self.UserModel.objects.create_user(email)
 
     def get_username(self, claims):
-        return claims.get('email')
+        return claims.get("email")

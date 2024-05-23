@@ -13,6 +13,7 @@ import subprocess
 import io
 import logging
 import time
+import math
 
 class BaseStitcher:
     """Base class for stitcher modules
@@ -243,7 +244,7 @@ class PILStitcher(BaseStitcher):
         PIL.Image.frombytes("RGB", (t_width, t_height), bytes(raw)).save(bio, "PNG")
         bio.seek(0)
 
-        result = File.objects.create(conversion=files[0].conversion, file=ContentFile(output, name="result.png", mime_type="image/png"))
+        result = File.objects.create(conversion=files[0].conversion, file=ContentFile(bio, name="result.png", mime_type="image/png"))
 
         return result
 
