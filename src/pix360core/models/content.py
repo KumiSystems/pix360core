@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from ..fields import Char32UUIDField as UUIDField
+
 import mimetypes
 import uuid
 
@@ -27,7 +29,7 @@ class File(models.Model):
         is_result (BooleanField): Whether this file is the result of a conversion
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    id = UUIDField(primary_key=True, default=uuid.uuid4)
     file = models.FileField(upload_to=file_upload_path)
     mime_type = models.CharField(max_length=256, default="application/octet-stream")
     conversion = models.ForeignKey(to='Conversion', on_delete=models.SET_NULL, null=True, blank=True)
@@ -65,7 +67,7 @@ class Conversion(models.Model):
         log (TextField): Log of the conversion
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    id = UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField(max_length=256, null=True, blank=True)
     url = models.URLField()
     downloader = models.CharField(max_length=256, null=True, blank=True)
