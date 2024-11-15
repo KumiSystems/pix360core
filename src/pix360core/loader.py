@@ -57,10 +57,21 @@ class Loader:
 
         downloaders = []
 
-        for entry_point in importlib.metadata.entry_points().get("pix360downloader", []):
-            try:
-                downloaders.append(entry_point.load())
-            except Exception as e:
-                print(f"Something went wrong trying to import {entry_point}: {e}")
+        try:
+            for entry_point in importlib.metadata.entry_points().get("pix360downloader", []):
+                try:
+                    downloaders.append(entry_point.load())
+                except Exception as e:
+                    print(f"Something went wrong trying to import {entry_point}: {e}")
+
+        except AttributeError:
+            for entry_point in importlib.metadata.entry_points().select(
+                group="pix360downloader"
+            ):
+                try:
+                    downloaders.append(entry_point.load())
+                except Exception as e:
+                    print(f"Something went wrong trying to import {entry_point}: {e}"
+            )
 
         return downloaders
